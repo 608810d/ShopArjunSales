@@ -374,6 +374,10 @@
                     <input type="number" id="houseCharge" name="houseCharge" step="0.01" placeholder="0.00">
                 </div>
                 <div class="form-group">
+                    <label>Total Cash Must Have (Auto-calculated)</label>
+                    <div class="display-value deposit" id="totalCashMustHaveDisplay">0.00</div>
+                </div>
+                <div class="form-group">
                     <label>Deposit in Operations</label>
                     <input type="number" id="depInOps" name="depInOps" step="0.01" placeholder="0.00">
                 </div>
@@ -409,6 +413,7 @@
         document.getElementById('scratchOff').addEventListener('input', updateSuggestion);
         document.getElementById('onlineLotto').addEventListener('input', updateSuggestion);
         document.getElementById('lottoPayout').addEventListener('input', updateSuggestion);
+        document.getElementById('houseCharge').addEventListener('input', updateCalculations);
 
         function updateCalculations() {
             const sixPercent = parseFloat(document.getElementById('sixPercentSales').value) || 0;
@@ -436,11 +441,16 @@
             // Deposit Lotto = Scratch Off + Online Lotto - Lotto Payout
             const depositLotto = (scratchOff + onlineLotto) - lottoPayout;
             
+            // Total Cash Must Have = Deposit OPS + Deposit Gas + Deposit Lotto - House Charge
+            const houseCharge = parseFloat(document.getElementById('houseCharge').value) || 0;
+            const totalCashMustHave = depositOps + depositGas + depositLotto - houseCharge;
+            
             document.getElementById('totalSalesDisplay').textContent = totalSales.toFixed(2);
             document.getElementById('taxDisplay').textContent = tax.toFixed(2);
             document.getElementById('depositOpsDisplay').textContent = depositOps.toFixed(2);
             document.getElementById('depositGasDisplay').textContent = depositGas.toFixed(2);
             document.getElementById('depositLottoDisplay').textContent = depositLotto.toFixed(2);
+            document.getElementById('totalCashMustHaveDisplay').textContent = totalCashMustHave.toFixed(2);
         }
 
         function updateSuggestion() {
