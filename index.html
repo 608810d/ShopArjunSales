@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopArjun Daily Sales Entry</title>
+    <title>ShopArjun Daily Sales Entry - KC Mart # 9</title>
     <style>
         * {
             margin: 0;
@@ -44,6 +44,13 @@
             font-size: 24px;
             font-weight: bold;
             color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .store-name {
+            font-size: 18px;
+            color: #28a745;
+            font-weight: bold;
             margin-bottom: 5px;
         }
 
@@ -88,6 +95,11 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
+        .read-only {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
         .two-column {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -112,6 +124,37 @@
 
         .section .form-group {
             margin-bottom: 12px;
+        }
+
+        .display-value {
+            padding: 12px;
+            background-color: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            text-align: right;
+        }
+
+        .with-comment {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .with-comment input {
+            width: 100%;
+        }
+
+        .suggestion-box {
+            padding: 12px;
+            background: #e8f5e9;
+            border-left: 4px solid #28a745;
+            border-radius: 4px;
+            color: #155724;
+            font-weight: 600;
+            margin-top: 10px;
         }
 
         button {
@@ -183,35 +226,29 @@
         <div class="header">
             <div class="logo">📊</div>
             <div class="title">ShopArjun</div>
+            <div class="store-name">KC Mart # 9</div>
             <div class="subtitle">Daily Sales Entry Form</div>
         </div>
 
         <form id="salesForm">
             <!-- Required Fields -->
-            <div class="two-column">
-                <div class="form-group">
-                    <label>Store ID <span class="required">*</span></label>
-                    <input type="text" id="storeId" name="storeId" placeholder="e.g., KC Mart # 9" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Month <span class="required">*</span></label>
-                    <select id="month" name="month" required>
-                        <option value="">Select Month</option>
-                        <option value="January">January</option>
-                        <option value="February">February</option>
-                        <option value="March">March</option>
-                        <option value="April">April</option>
-                        <option value="May">May</option>
-                        <option value="June">June</option>
-                        <option value="July">July</option>
-                        <option value="August">August</option>
-                        <option value="September">September</option>
-                        <option value="October">October</option>
-                        <option value="November">November</option>
-                        <option value="December">December</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label>Month <span class="required">*</span></label>
+                <select id="month" name="month" required>
+                    <option value="">Select Month</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -230,18 +267,35 @@
                     <label>Non-Tax Sales</label>
                     <input type="number" id="nonTax" name="nonTax" step="0.01" placeholder="0.00">
                 </div>
+                <div class="form-group">
+                    <label>Total Sales (Auto-calculated)</label>
+                    <div class="display-value" id="totalSalesDisplay">0.00</div>
+                </div>
+                <div class="form-group">
+                    <label>Sales Tax Collected (6% of 6% Sales)</label>
+                    <div class="display-value" id="taxDisplay">0.00</div>
+                </div>
             </div>
 
             <!-- Cash Section -->
             <div class="section">
                 <div class="section-title">💰 Cash & Operations</div>
                 <div class="form-group">
-                    <label>MO In</label>
+                    <label>Money Order</label>
                     <input type="number" id="moIn" name="moIn" step="0.01" placeholder="0.00">
                 </div>
                 <div class="form-group">
-                    <label>Cash Pay Out</label>
-                    <input type="number" id="cashPayOut" name="cashPayOut" step="0.01" placeholder="0.00">
+                    <label>Cash Pay Out + Comment</label>
+                    <div class="with-comment">
+                        <div>
+                            <label style="font-size: 12px; margin-bottom: 5px;">Amount</label>
+                            <input type="number" id="cashPayOutAmount" name="cashPayOutAmount" step="0.01" placeholder="0.00">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; margin-bottom: 5px;">Comment</label>
+                            <input type="text" id="cashPayOutComment" name="cashPayOutComment" placeholder="e.g., Lottery Mistake">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>EBT/Card In</label>
@@ -289,6 +343,9 @@
                     <label>Lotto Payout</label>
                     <input type="number" id="lottoPayout" name="lottoPayout" step="0.01" placeholder="0.00">
                 </div>
+                <div id="suggestedDepositBox" class="suggestion-box" style="display: none;">
+                    Suggested Deposit in Lottery Acc: <span id="suggestedDepositAmount">0.00</span>
+                </div>
             </div>
 
             <!-- Deposits Section -->
@@ -314,12 +371,45 @@
     </div>
 
     <script>
-        const GOOGLE_SHEET_ID = "1LX6QNImchjUqVZ8N8KEQO2iBwDYmH-I3gPFM6HBctbw";
+        const STORE_ID = "KC Mart # 9";
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9Az0SgdIRwagnXGkuQfD-XQm6hhhRnkyofLWNInzSK2otAg0_ER1DeDgfAM-y5Ubk/exec";
 
         const form = document.getElementById('salesForm');
         const submitBtn = document.getElementById('submitBtn');
         const statusMessage = document.getElementById('statusMessage');
+
+        // Auto-calculate displays
+        document.getElementById('sixPercentSales').addEventListener('input', updateCalculations);
+        document.getElementById('nonTax').addEventListener('input', updateCalculations);
+        document.getElementById('scratchOff').addEventListener('input', updateSuggestion);
+        document.getElementById('onlineLotto').addEventListener('input', updateSuggestion);
+        document.getElementById('lottoPayout').addEventListener('input', updateSuggestion);
+
+        function updateCalculations() {
+            const sixPercent = parseFloat(document.getElementById('sixPercentSales').value) || 0;
+            const nonTax = parseFloat(document.getElementById('nonTax').value) || 0;
+            
+            const totalSales = sixPercent + nonTax;
+            const tax = sixPercent * 0.06;
+            
+            document.getElementById('totalSalesDisplay').textContent = totalSales.toFixed(2);
+            document.getElementById('taxDisplay').textContent = tax.toFixed(2);
+        }
+
+        function updateSuggestion() {
+            const scratchOff = parseFloat(document.getElementById('scratchOff').value) || 0;
+            const onlineLotto = parseFloat(document.getElementById('onlineLotto').value) || 0;
+            const lottoPayout = parseFloat(document.getElementById('lottoPayout').value) || 0;
+            
+            const suggested = (scratchOff + onlineLotto) - lottoPayout;
+            
+            if (scratchOff > 0 || onlineLotto > 0 || lottoPayout > 0) {
+                document.getElementById('suggestedDepositBox').style.display = 'block';
+                document.getElementById('suggestedDepositAmount').textContent = suggested.toFixed(2);
+            } else {
+                document.getElementById('suggestedDepositBox').style.display = 'none';
+            }
+        }
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -329,13 +419,14 @@
             submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
 
             const formData = {
-                storeId: document.getElementById('storeId').value,
+                storeId: STORE_ID,
                 month: document.getElementById('month').value,
                 date: document.getElementById('date').value,
                 sixPercentSales: parseFloat(document.getElementById('sixPercentSales').value) || null,
                 nonTax: parseFloat(document.getElementById('nonTax').value) || null,
                 moIn: parseFloat(document.getElementById('moIn').value) || null,
-                cashPayOut: parseFloat(document.getElementById('cashPayOut').value) || null,
+                cashPayOut: parseFloat(document.getElementById('cashPayOutAmount').value) || null,
+                cashPayOutComment: document.getElementById('cashPayOutComment').value || null,
                 ebtCardIn: parseFloat(document.getElementById('ebtCardIn').value) || null,
                 atmCashOut: parseFloat(document.getElementById('atmCashOut').value) || null,
                 cigaretteCoup: parseFloat(document.getElementById('cigaretteCoup').value) || null,
@@ -365,6 +456,8 @@
                 statusMessage.style.display = 'block';
 
                 form.reset();
+                updateCalculations();
+                updateSuggestion();
 
             } catch (error) {
                 statusMessage.className = 'status-message error';
