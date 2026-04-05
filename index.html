@@ -225,6 +225,38 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .short-over-display {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: default;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .short-over-display.negative {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .short-over-display.positive {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .short-over-display.zero {
+            background: #343a40;
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 58, 64, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -385,6 +417,11 @@
                     <label>Deposit in Lottery</label>
                     <input type="number" id="depInLotto" name="depInLotto" step="0.01" placeholder="0.00">
                 </div>
+                <div class="form-group">
+                    <button type="button" class="short-over-display zero" id="shortOverDisplay">
+                        <span id="shortOverValue">Short / Over: 0.00</span>
+                    </button>
+                </div>
             </div>
 
             <button type="submit" id="submitBtn">Submit Daily Sales</button>
@@ -410,10 +447,15 @@
         document.getElementById('cigaretteCoup').addEventListener('input', updateCalculations);
         document.getElementById('gasSales').addEventListener('input', updateCalculations);
         document.getElementById('creditDebit').addEventListener('input', updateCalculations);
+        document.getElementById('scratchOff').addEventListener('input', updateCalculations);
         document.getElementById('scratchOff').addEventListener('input', updateSuggestion);
+        document.getElementById('onlineLotto').addEventListener('input', updateCalculations);
         document.getElementById('onlineLotto').addEventListener('input', updateSuggestion);
+        document.getElementById('lottoPayout').addEventListener('input', updateCalculations);
         document.getElementById('lottoPayout').addEventListener('input', updateSuggestion);
         document.getElementById('houseCharge').addEventListener('input', updateCalculations);
+        document.getElementById('depInOps').addEventListener('input', updateCalculations);
+        document.getElementById('depInLotto').addEventListener('input', updateCalculations);
 
         function updateCalculations() {
             const sixPercent = parseFloat(document.getElementById('sixPercentSales').value) || 0;
@@ -444,6 +486,28 @@
             // Total Cash Must Have = Deposit OPS + Deposit Gas + Deposit Lotto - House Charge
             const houseCharge = parseFloat(document.getElementById('houseCharge').value) || 0;
             const totalCashMustHave = depositOps + depositGas + depositLotto - houseCharge;
+            
+            // Short / Over = (Deposit in Operations + Deposit in Lottery) - Total Cash Must Have
+            const depInOps = parseFloat(document.getElementById('depInOps').value) || 0;
+            const depInLotto = parseFloat(document.getElementById('depInLotto').value) || 0;
+            const shortOver = (depInOps + depInLotto) - totalCashMustHave;
+            
+            // Update Short/Over display with color coding
+            const shortOverDisplay = document.getElementById('shortOverDisplay');
+            const shortOverValue = document.getElementById('shortOverValue');
+            shortOverValue.textContent = `Short / Over: ${shortOver.toFixed(2)}`;
+            
+            // Remove all color classes
+            shortOverDisplay.classList.remove('negative', 'positive', 'zero');
+            
+            // Add appropriate class based on value
+            if (shortOver < 0) {
+                shortOverDisplay.classList.add('negative');
+            } else if (shortOver > 0) {
+                shortOverDisplay.classList.add('positive');
+            } else {
+                shortOverDisplay.classList.add('zero');
+            }
             
             document.getElementById('totalSalesDisplay').textContent = totalSales.toFixed(2);
             document.getElementById('taxDisplay').textContent = tax.toFixed(2);
